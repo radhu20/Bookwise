@@ -1,0 +1,76 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE_NAME_BACKEND = 'backend'
+        DOCKER_IMAGE_NAME_FRONTEND = 'frontend'
+        DOCKER_IMAGE_NAME_MODEL = 'model'
+        GITHUB_REPO_URL = 'https://github.com/Somya05M/BookWise.git'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    // Checkout the code from the GitHub repository
+                    git branch: 'main', url: "${GITHUB_REPO_URL}"
+                }
+            }
+        }
+
+        stage('Build Backend Docker Image') {
+            steps {
+                script {
+                    // Build Backend Docker image
+                    docker.build("${DOCKER_IMAGE_NAME_BACKEND}", '-f Dockerfile.backend .')
+                }
+            }
+        }
+
+        stage('Build Frontend Docker Image') {
+            steps {
+                script {
+                    // Build Frontend Docker image
+                    docker.build("${DOCKER_IMAGE_NAME_FRONTEND}", '-f Dockerfile.frontend .')
+                }
+            }
+        }
+
+        stage('Build Model Docker Image') {
+            steps {
+                script {
+                    // Build Model Docker image
+                    docker.build("${DOCKER_IMAGE_NAME_MODEL}", '-f Dockerfile.model .')
+                }
+            }
+        }
+
+        stage('Push Docker Images to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('', DockerHubCred) {
+                        // Push Backend Docker image to Docker Hub
+                        docker.image("${DOCKER_IMAGE_NAME_BACKEND}").push()
+
+                        // Push Frontend Docker image to Docker Hub
+                        docker.image("${DOCKER_IMAGE_NAME_FRONTEND}").push()
+
+                        // Push Model Docker image to Docker Hub
+                        docker.image("${DOCKER_IMAGE_NAME_MODEL}").push()
+                    }
+                }
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                script {
+                    ansiblePlaybook(
+                        playbook: 'deploy.yml',
+                        inventory: 'inventory'
+                    )
+                }
+            }
+        }
+    }
+}
