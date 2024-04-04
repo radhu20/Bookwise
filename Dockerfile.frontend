@@ -1,0 +1,14 @@
+# Frontend Dockerfile
+FROM nginx:latest
+
+# Create the app directory
+RUN mkdir /usr/share/nginx/html/app
+
+# Copy frontend files into the app directory
+COPY frontend /usr/share/nginx/html/app
+
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Set NGINX to run in the foreground
+CMD ["nginx", "-g", "daemon off;"]

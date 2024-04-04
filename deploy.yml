@@ -1,0 +1,36 @@
+---
+- name: Deploy BookWise Application
+  hosts: localhost
+  tasks:
+    - name: Pull Backend Docker Image
+      docker_image:
+        name: "{{ DOCKER_IMAGE_NAME_BACKEND }}"
+        source: pull
+
+    - name: Pull Frontend Docker Image
+      docker_image:
+        name: "{{ DOCKER_IMAGE_NAME_FRONTEND }}"
+        source: pull
+
+    - name: Pull Model Docker Image
+      docker_image:
+        name: "{{ DOCKER_IMAGE_NAME_MODEL }}"
+        source: pull
+
+    - name: Start Backend Container
+      docker_container:
+        name: backend_container
+        image: "{{ DOCKER_IMAGE_NAME_BACKEND }}"
+        state: started
+
+    - name: Start Frontend Container
+      docker_container:
+        name: frontend_container
+        image: "{{ DOCKER_IMAGE_NAME_FRONTEND }}"
+        state: started
+
+    - name: Start Model Container
+      docker_container:
+        name: model_container
+        image: "{{ DOCKER_IMAGE_NAME_MODEL }}"
+        state: started

@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "5000:5000"  # Map container port 5000 to host port 5000
+    volumes:
+      - ./backend.py:/app/backend.py  # Mount the backend.py file into the container
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"  # Map container port 80 to host port 80
+
+  model:
+    build:
+      context: .
+      dockerfile: Dockerfile.model
+    volumes:
+      - ./popular.pkl:/app/popular.pkl  # Mount the pickle files into the container
+      - ./pt.pkl:/app/pt.pkl
+      - ./books.pkl:/app/books.pkl
+      - ./similarity_scores.pkl:/app/similarity_scores.pkl
+      - ./dataset:/app/dataset  # Mount the dataset folder into the container
+      - ./book-recommender-system.ipynb:/app/book-recommender-system.ipynb  # Mount the Jupyter notebook file into the container

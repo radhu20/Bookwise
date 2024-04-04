@@ -1,0 +1,13 @@
+# Backend Dockerfile
+FROM python:3.8
+
+WORKDIR /app
+
+# Install Python packages
+RUN pip install --no-cache-dir numpy==1.19.5 pandas==1.3.3 flask==2.0.1 Werkzeug==2.0.1
+
+# Copy the application code into the container
+COPY backend.py /app/
+
+# Set the command to run the application
+CMD ["python", "backend.py"]
