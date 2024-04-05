@@ -18,6 +18,15 @@ pipeline {
             }
         }
 
+        stage('Run Model') {
+            steps {
+                script {
+                    // Assuming you have a mechanism to run Jupyter notebooks
+                    sh 'jupyter nbconvert --to notebook --execute book-recommender-system.ipynb'
+                }
+            }
+        }
+
         stage('Build Backend Docker Image') {
             steps {
                 script {
