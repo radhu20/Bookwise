@@ -41,7 +41,7 @@ const Recommend = () => {
 
     return (
         <div>
-            <nav className="navbar" style={{ position: 'fixed', top: '0', width: '100%' }}>
+            <nav className="navbar">
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <a className="navbar-brand">BookWise</a>
