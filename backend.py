@@ -11,11 +11,13 @@ similarity_scores = pickle.load(open('similarity_scores.pkl', 'rb'))
 
 # Initialize Flask application
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}},methods=['GET', 'POST'])
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+#app.use(cors());
 
 @app.route('/', methods=['POST'])
 @cross_origin()
@@ -61,5 +63,5 @@ def recommend():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8081)
+    app.run(host='0.0.0.0',debug='true', port=8081)
 

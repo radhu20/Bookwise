@@ -1,30 +1,38 @@
-version: '3'
-
+version: '3.8'
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
-    ports:
-      - "5000:5000"  # Map container port 5000 to host port 5000
-    volumes:
-      - ./backend.py:/app/backend.py  # Mount the backend.py file into the container
-
   frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile.frontend
     ports:
-      - "80:80"  # Map container port 80 to host port 80
-
-  model:
-    build:
-      context: .
-      dockerfile: Dockerfile.model
+      - "8080:8080"
     volumes:
-      - ./popular.pkl:/app/popular.pkl  # Mount the pickle files into the container
+      - ./frontend:/app
+      - /app/node_modules
+
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./backend.py:/app/backend.py  # Mount the backend.py file into the container
+      # Mount ML model files and data, assuming they are needed by the backend
+      - ./popular.pkl:/app/popular.pkl
       - ./pt.pkl:/app/pt.pkl
       - ./books.pkl:/app/books.pkl
       - ./similarity_scores.pkl:/app/similarity_scores.pkl
-      - ./dataset:/app/dataset  # Mount the dataset folder into the container
-      - ./book-recommender-system.ipynb:/app/book-recommender-system.ipynb  # Mount the Jupyter notebook file into the container
+      - ./dataset:/app/dataset
+      - ./book-recommender-system.ipynb:/app/book-recommender-system.ipynb
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
