@@ -9,6 +9,13 @@ pipeline {
     }
     stages{
         
+        stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+                          userRemoteConfigs: [[url: 'https://github.com/radhu20/Bookwise/']]])
+            }
+        }
         stage('Run Jupyter Notebook') {
             steps {
                 sh "jupyter nbconvert --to notebook --execute ${env.NOTEBOOK_PATH} --output ${env.NOTEBOOK_PATH}"
