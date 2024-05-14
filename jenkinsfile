@@ -11,7 +11,6 @@ pipeline {
     tools {
         // Ensure these tools are installed on Jenkins
         jupyter 'default'
-        ansible 'default'
     }
 
     stages {
