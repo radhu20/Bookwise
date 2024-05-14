@@ -7,6 +7,8 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
     }
+    stage{
+        
         stage('Run Jupyter Notebook') {
             steps {
                 sh "jupyter nbconvert --to notebook --execute ${env.NOTEBOOK_PATH} --output ${env.NOTEBOOK_PATH}"
