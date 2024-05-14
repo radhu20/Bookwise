@@ -8,11 +8,6 @@ pipeline {
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
     }
 
-    tools {
-        // Ensure these tools are installed on Jenkins
-        jupyter 'default'
-    }
-
     stages {
         stage('Checkout') {
             steps {
