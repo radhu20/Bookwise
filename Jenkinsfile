@@ -7,7 +7,7 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
     }
-    stage{
+    stages{
         
         stage('Run Jupyter Notebook') {
             steps {
