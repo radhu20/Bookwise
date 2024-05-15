@@ -6,8 +6,8 @@ pipeline {
         NOTEBOOK_PATH = 'book-recommender-system.ipynb'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
+        PATH = "${env.WORKSPACE}/.local/bin:${env.PATH}"
     }
-
     stages {
         stage('Checkout') {
             steps {
