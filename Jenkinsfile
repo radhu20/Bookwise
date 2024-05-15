@@ -18,7 +18,10 @@ pipeline {
 
          stage('Install Dependencies') {
             steps {
-                sh 'pip install jupyter'
+                sh 'pip install --user jupyter'
+                script {
+                    env.PATH = "${env.WORKSPACE}/.local/bin:${env.PATH}"
+                }
             }
         }
 
