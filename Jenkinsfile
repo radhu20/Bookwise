@@ -16,18 +16,15 @@ pipeline {
             }
         }
 
-         stage('Install Dependencies') {
+        stage('Install Dependencies') {
             steps {
                 sh 'pip install --user jupyter'
-                script {
-                    env.PATH = "${env.WORKSPACE}/.local/bin:${env.PATH}"
-                }
             }
         }
-
         stage('Run Jupyter Notebook') {
             steps {
-                sh "jupyter nbconvert --to notebook --execute ${env.NOTEBOOK_PATH} --output ${env.NOTEBOOK_PATH}"
+                // Use the full path to the jupyter executable
+                sh '/var/lib/jenkins/.local/bin/jupyter nbconvert --to notebook --execute book-recommender-system.ipynb --output book-recommender-system.ipynb'
             }
         }
 
