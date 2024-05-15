@@ -7,32 +7,47 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
     }
-
-    tools {
-        // Ensure these tools are installed on Jenkins
-        jupyter 'default'
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/your-username/your-repo.git', credentialsId: 'your-github-credentials-id']]])
+                          userRemoteConfigs: [[url: 'https://github.com/radhu20/Bookwise/']]])
             }
         }
 
+         stage('Install Dependencies') {
+            steps {
+                // Install dependencies from requirements.txt
+                sh 'pip install --user -r requirements.txt'
+            }
+        }
         stage('Run Jupyter Notebook') {
             steps {
-                sh "jupyter nbconvert --to notebook --execute ${env.NOTEBOOK_PATH} --output ${env.NOTEBOOK_PATH}"
+                // Use the full path to the jupyter executable
+                sh '/var/lib/jenkins/.local/bin/jupyter nbconvert --to notebook --execute book-recommender-system.ipynb --output book-recommender-system.ipynb'
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Backend Tests') {
             steps {
-                sh "python -m pytest tests/test_bookwise.py" // assuming pytest for testing
+                sh 'python -m unittest discover'
             }
         }
-
+        stage('Install Frontend Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Run Frontend Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Run End-to-End Tests') {
+            steps {
+                sh 'npx cypress run'
+            }
+        }
         stage('Docker Compose Up') {
             steps {
                 sh "docker-compose -f ${env.DOCKER_COMPOSE_PATH} up --build -d"
@@ -57,3 +72,4 @@ pipeline {
         }
     }
 }
+
