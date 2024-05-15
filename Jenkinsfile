@@ -6,7 +6,6 @@ pipeline {
         NOTEBOOK_PATH = 'book-recommender-system.ipynb'
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
-        PATH = "${env.WORKSPACE}/.local/bin:${env.PATH}"
     }
     stages {
         stage('Checkout') {
@@ -16,9 +15,10 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+         stage('Install Dependencies') {
             steps {
-                sh 'pip install --user jupyter'
+                // Install dependencies from requirements.txt
+                sh 'pip install --user -r requirements.txt'
             }
         }
         stage('Run Jupyter Notebook') {
@@ -27,7 +27,6 @@ pipeline {
                 sh '/var/lib/jenkins/.local/bin/jupyter nbconvert --to notebook --execute book-recommender-system.ipynb --output book-recommender-system.ipynb'
             }
         }
-
         stage('Run Tests') {
             steps {
                 sh "python -m pytest tests/test_bookwise.py" // assuming pytest for testing
