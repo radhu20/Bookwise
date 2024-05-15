@@ -16,6 +16,12 @@ pipeline {
             }
         }
 
+         stage('Install Dependencies') {
+            steps {
+                sh 'pip install jupyter'
+            }
+        }
+
         stage('Run Jupyter Notebook') {
             steps {
                 sh "jupyter nbconvert --to notebook --execute ${env.NOTEBOOK_PATH} --output ${env.NOTEBOOK_PATH}"
