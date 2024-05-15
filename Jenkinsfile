@@ -27,12 +27,27 @@ pipeline {
                 sh '/var/lib/jenkins/.local/bin/jupyter nbconvert --to notebook --execute book-recommender-system.ipynb --output book-recommender-system.ipynb'
             }
         }
-        stage('Run Tests') {
+
+        stage('Run Backend Tests') {
             steps {
-                sh "python -m pytest tests/test_bookwise.py" // assuming pytest for testing
+                sh 'python -m unittest discover'
             }
         }
-
+        stage('Install Frontend Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Run Frontend Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Run End-to-End Tests') {
+            steps {
+                sh 'npx cypress run'
+            }
+        }
         stage('Docker Compose Up') {
             steps {
                 sh "docker-compose -f ${env.DOCKER_COMPOSE_PATH} up --build -d"
