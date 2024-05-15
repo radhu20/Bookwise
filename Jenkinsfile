@@ -7,15 +7,15 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
     }
-    stages{
-        
-        stages {
+
+    stages {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/radhu20/Bookwise/']]])
+                          userRemoteConfigs: [[url: 'https://github.com/your-username/your-repo.git', credentialsId: 'your-github-credentials-id']]])
             }
         }
+
         stage('Run Jupyter Notebook') {
             steps {
                 sh "jupyter nbconvert --to notebook --execute ${env.NOTEBOOK_PATH} --output ${env.NOTEBOOK_PATH}"
@@ -52,3 +52,4 @@ pipeline {
         }
     }
 }
+
