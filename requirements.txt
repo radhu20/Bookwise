@@ -1,4 +1,8 @@
-numpy
+Flask
+Flask-Cors
+Flask-SQLAlchemy
+Werkzeug
 pandas
-jupyter
+numpy
 scikit-learn
+unittest
