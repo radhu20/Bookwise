@@ -8,10 +8,14 @@ pipeline {
         SSH_CREDENTIALS_ID = 'wsl-ssh-credentials'
     }
     stages {
-        stage('Checkout') {
+       stage('Clone Repository') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/radhu20/Bookwise/']]])
+                script {
+                    // Clone the private repository using credentials
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASS')]) {
+                        sh "git clone https://${GITHUB_USER}:${GITHUB_PASS}@github.com/radhu20/BookWise-1.git"
+                    }
+                }
             }
         }
 
